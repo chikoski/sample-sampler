@@ -1,0 +1,15 @@
+{
+  "name": "sample-vocoder",
+  "version": "1.0.0",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "devDependencies": {
+    "backbone": "~1.0.0",
+    "underscore": "~1.4.4",
+    "requirejs": "~2.1.6",
+    "jquery": "latest"
+  }
+}
