@@ -19,6 +19,10 @@ window.require.config({
     },
     jquery: {
       exports: '$'
+    },
+    onsenui: {
+      deps: ['angular'],
+      exports: 'ons'
     }
   }
 });
@@ -99,14 +103,26 @@ window.require([], function(){
     }
   };
 
+  var labelOfFile = function(file){
+    var el = document.createElement("div");
+    el.className = "item-inner";
+    el.textContent = file.name;
+    return el;
+  };
+
   var renderFile = function(file){
     var el = document.createElement("li");
-    el.textContent = file.name;
+    el.appendChild(labelOfFile(file));
     el.addEventListener("click", function(){
       console.log("click");
       playFile(file);
     });
+    el.className = "item-content";
     return el;
+  };
+
+  var deviceStorageAvailable = function(){
+    return false;
   };
 
   var libraryView = document.querySelector("#library > ul");
@@ -114,13 +130,30 @@ window.require([], function(){
     updateListView(library, libraryView, renderFile);
   };
 
-  document.querySelector("#file").addEventListener("change", function(event){
-    var list = (event.target || {}).files;
+  var fileInput = document.querySelector("#file");
+  fileInput.addEventListener("change", function(event){
+    var list = (event.target || {}).files || [];
     if(list != null && list.length > 0){
       addFiles(list);
       updateLibraryView();
     }
   });
+
+  document.querySelector("#reload").addEventListener("click", function(event){
+    event.preventDefault();
+    if(deviceStorageAvailable()){
+    }else{
+      fileInput.click();
+    }
+  });
+
+  var hideElement = function(elm){
+    elm.classList.add("hidden");
+  };
+
+  var showElement = function(elm){
+    elm.classList.remove("hidden");
+  };
 
   var startButton = document.querySelector("#start-recording");
   var stopButton = document.querySelector("#stop-recording");
@@ -130,6 +163,8 @@ window.require([], function(){
   startButton.addEventListener("click", function(event){
     startButton.disabled = true;
     stopButton.disabled = false;
+    hideElement(startButton);
+    showElement(stopButton);
     recorder.start();
     console.log("start recording");
   });
@@ -137,8 +172,12 @@ window.require([], function(){
   stopButton.addEventListener("click", function(event){
     stopButton.disabled = true;
     startButton.disabled = false;
+    hideElement(stopButton);
+    showElement(startButton);
     recorder.stop();
     console.log("stop recording");
   });
-  
+
+  hideElement(stopButton);
+  var myApp = new Framework7();
 });

@@ -3,21 +3,94 @@
   <head>
     <title>Sampler</title>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="components/framework7/css/framework7.min.css">
+    <link rel="stylesheet" href="css/app.css">
   </head>
-  <body>
-    <input type="file" id="file" multiple>
-    <button type="button" id="start-recording">録音開始</button>
-    <button type="button" id="stop-recording">録音停止</button>
-    <section id="library">
-      <h2>ライブラリー</h2>
-      <ul>
-      </ul>
-    </section>
-    <section id="samples">
-      <h2>サンプル</h2>
-      <ul>
-      </ul>
-    </section>
+  <body class="ios8">
+    <div class="statusbar-overlay"></div>
+
+    <div class="views tabs toolbar-through">
+      
+      <div id="main-view" class="view view-main tab active">
+
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center">
+              Pad
+            </div>
+            <div class="right">
+              <button type="button" id="start-recording" class="button button-round">録音開始</button>
+              <button type="button" id="stop-recording" class="button button-round hidden">録音停止</button>
+            </div>
+          </div>
+        </div>  
+        
+        <div class="pages">
+          <div data-page="main" class="page">
+            <div class="page-content">
+              <div class="list-block">
+                <ul>
+                  <li>
+                    
+                    <div class="item-content">
+                      <div class="item-inner">
+                        <div class="item-title label">Filter</div>
+                        <div class="item-input">
+                          <select id="filters">
+                            <option>HighPass</option>
+                            <option>LowPass</option>
+                            <option>BandPass</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="content-block">                
+                <canvas>
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </div>        
+      </div>
+      
+      <div id="library-view" class="view tab">
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="center">Songs</div>
+            <div class="right"><a id="reload" href="#" class="button button-round">Reload</a></div>
+          </div>
+        </div>
+
+        <div class="pages navbar-through">
+          <div data-page="index-2" class="page">
+            <div class="page-content">
+              <div id="library" class="list-block">
+                <ul>
+                </ul>
+              </div>
+            </div>
+            <input id="file" multiple type="file">
+          </div>
+        </div>
+      </div>
+
+      <div class="toolbar tabbar tabbar-labels">
+        <div class="toolbar-inner">
+          <a href="#main-view" class="tab-link active">
+            <span class="tabbar-label">Pad</span>
+          </a>
+          <a href="#library-view" class="tab-link">
+            <span class="tabbar-label">Songs</span>
+          </a>
+        </div>
+      </div>
+            
+    </div>
+   
+    <script src="components/framework7/js/framework7.min.js"></script>
     <script src="components/requirejs/require.js" data-main="js/boot"></script>
   </body>
 </html>

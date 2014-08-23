@@ -1,4 +1,3 @@
-#pad{
-  height: 400px;
-  background-color: #666;
+.hidden{
+  display: none;
 }
