@@ -27,27 +27,28 @@ window.require.config({
   }
 });
 
-window.require([], function(){
+window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], function(Microphone, Looper, createAudioBuffer, OnOffButton){
 
-  var samples = [];
   var library = [];
 
   var context =  new AudioContext();
   var bufferedSource = context.createBufferSource();
   bufferedSource.loop = true;
-  bufferedSource.connect(context.destination);
+  var mic = new Microphone(context);
+  mic.disable();
+  var looper = new Looper(context);
 
-  var dest = context.createMediaStreamDestination();
-  var recorder = new MediaRecorder(dest.stream);
-  bufferedSource.connect(dest);
+  mic.connect(looper.destination);
+  bufferedSource.connect(looper.destination);
+
+  mic.connect(context.destination);
+  bufferedSource.connect(context.destination);
 
   var updateListView = function(list, elm, renderer){
     for(var i = elm.childElementCount; i < list.length; i++){
       elm.appendChild(renderer(list[i]));
     }
   };
-
-  var sampleView = document.querySelector("#samples > ul");
 
   var renderSample = function(sample){
     var el = document.createElement("li");
@@ -58,39 +59,13 @@ window.require([], function(){
     return el;
   };
   
-  var updateSampleView = function(){
-    updateListView(samples, sampleView, renderSample);
-  };
-
-  recorder.ondataavailable = function(event){
-    console.log(event);
-    samples.push({timeStamp: event.timeStamp, data: event.data});
-    updateSampleView();
-  };
-  
-  var createAudioBuffer = function(file){
-    return new Promise(function(resolve, fail){
-      console.log("start buffer creation");
-      var reader = new FileReader();
-      reader.onload = function(event){
-        context.decodeAudioData(event.target.result, resolve);
-      };
-      reader.readAsArrayBuffer(file);
-    });
-  };
-
   var play = function(buffer){
     bufferedSource.buffer = buffer;
     bufferedSource.start(0);
   };
 
   var playFile = function(file){
-    createAudioBuffer(file).then(function(buffer){
-      console.log("buffer created");
-      play(buffer);
-    }, function(error){
-      console.log(error);
-    });
+    createAudioBuffer(file, context).then(play, console.log);
   };
 
   var addFile = function(item){
@@ -147,37 +122,16 @@ window.require([], function(){
     }
   });
 
-  var hideElement = function(elm){
-    elm.classList.add("hidden");
-  };
-
-  var showElement = function(elm){
-    elm.classList.remove("hidden");
-  };
-
-  var startButton = document.querySelector("#start-recording");
-  var stopButton = document.querySelector("#stop-recording");
-  startButton.disabled = false;
-  stopButton.disabled = true;
-
-  startButton.addEventListener("click", function(event){
-    startButton.disabled = true;
-    stopButton.disabled = false;
-    hideElement(startButton);
-    showElement(stopButton);
-    recorder.start();
+  var recordingButton = new OnOffButton(document.querySelector("#start-recording"),
+                                        document.querySelector("#stop-recording"));
+  recordingButton.addEventListener("on", function(event){
+    looper.startRecording();
     console.log("start recording");
   });
-
-  stopButton.addEventListener("click", function(event){
-    stopButton.disabled = true;
-    startButton.disabled = false;
-    hideElement(stopButton);
-    showElement(startButton);
-    recorder.stop();
+  recordingButton.addEventListener("off", function(event){
+    looper.stopRecording();
     console.log("stop recording");
   });
 
-  hideElement(stopButton);
   var myApp = new Framework7();
 });
