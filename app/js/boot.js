@@ -133,5 +133,16 @@ window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], 
     console.log("stop recording");
   });
 
+  var micButton = new OnOffButton(document.querySelector("#start-microphone"),
+                                  document.querySelector("#stop-microphone"));
+  micButton.addEventListener("on", function(){
+    console.log("Enable the microphone");
+    mic.enable();
+  });
+  micButton.addEventListener("off", function(){
+    console.log("Disable the microphone");
+    mic.disable();
+  });
+
   var myApp = new Framework7();
 });
