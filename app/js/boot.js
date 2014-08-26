@@ -27,22 +27,26 @@ window.require.config({
   }
 });
 
-window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], function(Microphone, Looper, createAudioBuffer, OnOffButton){
+window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAudioBuffer, View){
 
+  var myApp = new Framework7();
+  
   var library = [];
 
   var context =  new AudioContext();
   var bufferedSource = context.createBufferSource();
   bufferedSource.loop = true;
-  var mic = new Microphone(context);
+  var mic = new Parts.Microphone(context);
   mic.disable();
-  var looper = new Looper(context);
+  var looper = new Parts.Looper(context);
+  var filter = new Parts.Filter(context);
+  
+  mic.connect(filter.destination);
+  bufferedSource.connect(filter.destination);
 
-  mic.connect(looper.destination);
-  bufferedSource.connect(looper.destination);
-
-  mic.connect(context.destination);
-  bufferedSource.connect(context.destination);
+  filter.connect(looper.destination);
+  looper.connect(filter.destination);
+  filter.connect(context.destination);
 
   var updateListView = function(list, elm, renderer){
     for(var i = elm.childElementCount; i < list.length; i++){
@@ -60,11 +64,13 @@ window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], 
   };
   
   var play = function(buffer){
+    console.log("play buffer");
     bufferedSource.buffer = buffer;
     bufferedSource.start(0);
   };
 
   var playFile = function(file){
+    console.log(file.name || "looper");
     createAudioBuffer(file, context).then(play, console.log);
   };
 
@@ -89,7 +95,6 @@ window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], 
     var el = document.createElement("li");
     el.appendChild(labelOfFile(file));
     el.addEventListener("click", function(){
-      console.log("click");
       playFile(file);
     });
     el.className = "item-content";
@@ -122,27 +127,17 @@ window.require(["microphone", "looper", "create-audiobuffer", "on-off-button"], 
     }
   });
 
-  var recordingButton = new OnOffButton(document.querySelector("#start-recording"),
-                                        document.querySelector("#stop-recording"));
-  recordingButton.addEventListener("on", function(event){
-    looper.startRecording();
-    console.log("start recording");
-  });
-  recordingButton.addEventListener("off", function(event){
-    looper.stopRecording();
-    console.log("stop recording");
+  var looperControl = new View.Looper({looper: looper, recordButton: document.querySelector("#recording")});
+  var micButton = new View.MicButton({mic: mic, el: document.querySelector("#microphone")});
+  var filterControl = new View.Filter({pad: document.querySelector("#pad"),
+                                       changeButton: document.querySelector("#select-filter-type"),
+                                       actionListController: myApp,
+                                       filter: filter
+                                      });
+
+  document.querySelector("#play-music").addEventListener("click", function(){
+    bufferedSource.stop(0);
   });
 
-  var micButton = new OnOffButton(document.querySelector("#start-microphone"),
-                                  document.querySelector("#stop-microphone"));
-  micButton.addEventListener("on", function(){
-    console.log("Enable the microphone");
-    mic.enable();
-  });
-  micButton.addEventListener("off", function(){
-    console.log("Disable the microphone");
-    mic.disable();
-  });
 
-  var myApp = new Framework7();
 });
