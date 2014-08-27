@@ -6,8 +6,8 @@ define([], function(){
 
   Filter.prototype = {
     maxGain: 2.0,
-    maxFrequency: 22000.0,
-    maxQ: 3.0,
+    maxFrequency: 22050.0,
+    maxQ: 30.0,
     initialize: function(context){
       this.output = context.createGain();
       this.destination = context.createBiquadFilter();
@@ -30,16 +30,16 @@ define([], function(){
       this.output.gain.value = Math.max(0, Math.min(value, this.maxGain));
     },
     get x(){
-      return this.destination.frequency.value / this.maxFrequency;
+      return this.destination.frequency.value;
     },
     set x(value){
-      this.gain = this.normailze(value) * this.maxFrequency;
+      this.destination.frequency.value = Math.floor(this.normalize(value) * this.maxFrequency);
     },
     get y(){
-      return this.destination.Q.value / this.maxQ;
+      return this.destination.Q.value;
     },
     set y(value){
-      this.destination.Q.value = this.normailze(value) * this.maxQ;
+      this.destination.Q.value = Math.floor(this.normalize(value) * this.maxQ);
     },
     mute: function(){
       this.gain = 0;

@@ -6,6 +6,7 @@ define(["parts/filter/passthrough"], function(PassThrough){
 
   HighPass.prototype = Object.create(PassThrough.prototype);
   HighPass.prototype.constructor = HighPass;
+  HighPass.prototype.maxFrequency = 8000.0;
   HighPass.prototype.initialize = function(context){
     this.output = context.createGain();
     this.destination = context.createBiquadFilter();
