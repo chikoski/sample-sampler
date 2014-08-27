@@ -4,7 +4,7 @@ define(["parts/filter/passthrough"], function(PassThrough){
     this.initialize.apply(this, arguments);
   };
 
-  CenterCancel.prototype = PassThrough.prototype;
+  CenterCancel.prototype = Object.create(PassThrough.prototype);
   CenterCancel.prototype.constructor = CenterCancel;
   CenterCancel.prototype.initialize = function(context){
     this.output = context.createGain();

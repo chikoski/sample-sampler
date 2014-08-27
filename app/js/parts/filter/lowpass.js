@@ -4,7 +4,7 @@ define(["parts/filter/passthrough"], function(PassThrough){
     this.initialize.apply(this, arguments);
   };
 
-  LowPass.prototype = PassThrough.prototype;
+  LowPass.prototype = Object.create(PassThrough.prototype);
   LowPass.prototype.constructor = LowPass;
   LowPass.prototype.initialize = function(context){
     this.output = context.createGain();

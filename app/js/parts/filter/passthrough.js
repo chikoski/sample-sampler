@@ -45,7 +45,7 @@ define([], function(){
       this.gain = 0;
     },
     enable: function(){
-      this.gain = 1.0;
+      this.gain = this.output.gain.defaultValue;
     },
     disable: function(){
       this.mute();
