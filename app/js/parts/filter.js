@@ -1,11 +1,13 @@
 define([
   "parts/filter/passthrough",
   "parts/filter/lowpass",
-  "parts/filter/highpass"
+  "parts/filter/highpass",
+  "parts/filter/center-cancel"
 ], function(
   PassThroughFilter,
   LowPassFilter,
-  HighPassFilter
+  HighPassFilter,
+  CenterCancelFilter
 ){
 
   var Filter = function(){
@@ -31,9 +33,9 @@ define([
     return new HighPassFilter(context);
   };
   var createCenterCancelFilter = function(context){
+    return new CenterCancelFilter(context);
   };
   var createNoiseFilter = function(context){
-
   };
   var createPitchShifter = function(context){
   };
@@ -79,9 +81,9 @@ define([
       this.output.disconnect();
     },
     choose: function(name){
-      var chosen = this._filters[name] || this.passthrough;
+      this.enabledFilter = this._filters[name] || this.passthrough;
       this.muteAll();
-      chosen.enable();
+      this.enabledFilter.enable();
     },
     muteAll: function(){
       for(var key in this._filters){
@@ -93,6 +95,18 @@ define([
     },
     get list(){
       return Object.keys(this._filters);
+    },
+    get x(){
+      return this.enabledFilter.x;
+    },
+    set x(value){
+      this.enabledFilter.x = value;
+    },
+    get y(){
+      return this.enabledFilter.y;
+    },
+    set y(value){
+      this.enabledFilter.y = value;
     }
   };
 
