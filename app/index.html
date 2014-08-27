@@ -28,12 +28,14 @@
           <div data-page="main" class="page">
             <div class="page-content">
               <div class="content-block">
+                <canvas id="visualizer" width="800" height="200"></canvas>
                 <p class="buttons-row">
                   <a href="#" data-role="track-selector" data-track="0" class="button">トラック1</a>
                   <a href="#" data-role="track-selector" data-track="1" class="button">トラック2</a>
                   <a href="#" data-role="track-selector" data-track="2" class="button">トラック3</a>
                   <a href="#" data-role="track-selector" data-track="3" class="button">トラック4</a>
                 </p>
+                <div>x = <span id="x">n/a</span> / y = <span id="y">n/a</span></div>
                 <div id="pad"></div>
                 <p>
                   <a href="#" id="select-filter-type" class="button">フィルタタイプを変更</a>
@@ -41,7 +43,7 @@
               </div>
             </div>
           </div>
-        </div>        
+        </div>
       </div>
       
       <div id="library-view" class="view tab">

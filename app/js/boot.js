@@ -40,13 +40,19 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
   mic.disable();
   var looper = new Parts.Looper(context);
   var filter = new Parts.Filter(context);
+
+  var outputGain = context.createGain();
+  var analyser = context.createAnalyser();
   
   mic.connect(filter.destination);
   bufferedSource.connect(filter.destination);
 
   filter.connect(looper.destination);
   looper.connect(filter.destination);
-  filter.connect(context.destination);
+  filter.connect(outputGain);
+
+  outputGain.connect(context.destination);
+  outputGain.connect(analyser);
 
   var updateListView = function(list, elm, renderer){
     for(var i = elm.childElementCount; i < list.length; i++){
@@ -132,6 +138,11 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
   var filterControl = new View.Filter({pad: document.querySelector("#pad"),
                                        changeButton: document.querySelector("#select-filter-type"),
                                        actionListController: myApp,
-                                       filter: filter
+                                       filter: filter,
+                                       indicaterX: document.querySelector("#x"),
+                                       indicaterY: document.querySelector("#y")
                                       });
+  var visualizer = new View.Visualizer({analyser: analyser,
+                                        canvas: document.querySelector("#visualizer")});
+  visualizer.start();
 });
