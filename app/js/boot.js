@@ -134,10 +134,4 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
                                        actionListController: myApp,
                                        filter: filter
                                       });
-
-  document.querySelector("#play-music").addEventListener("click", function(){
-    bufferedSource.stop(0);
-  });
-
-
 });

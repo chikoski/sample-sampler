@@ -16,13 +16,10 @@
         <div class="navbar">
           <div class="navbar-inner">
             <div class="left">
-              <button type="button" id="microphone" class="button button-round">マイク</button>
-            </div>
-            <div class="center">
-              Pad
+              <button type="button" id="microphone" class="button">マイク</button>
             </div>
             <div class="right">
-              <a href="#" id="play-music" class="button button-round">曲停止</a>
+                  <a href="#" id="recording" class="button">録音</a>
             </div>
           </div>
         </div>  
@@ -32,15 +29,15 @@
             <div class="page-content">
               <div class="content-block">
                 <p class="buttons-row">
-                  <a href="#" id="recording" class="button">録音</a>
-                  <a href="#" id="loop" class="button">ループ</a>
+                  <a href="#" data-role="track-selector" data-track="0" class="button">トラック1</a>
+                  <a href="#" data-role="track-selector" data-track="1" class="button">トラック2</a>
+                  <a href="#" data-role="track-selector" data-track="2" class="button">トラック3</a>
+                  <a href="#" data-role="track-selector" data-track="3" class="button">トラック4</a>
                 </p>
-              </div>
-              <div class="content-block">
                 <div id="pad"></div>
                 <p>
                   <a href="#" id="select-filter-type" class="button">フィルタタイプを変更</a>
-                </p>
+                </p>                
               </div>
             </div>
           </div>
