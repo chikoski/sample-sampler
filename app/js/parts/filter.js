@@ -82,8 +82,14 @@ define([
     },
     choose: function(name){
       this.enabledFilter = this._filters[name] || this.passthrough;
+    },
+    enable: function(){
       this.muteAll();
       this.enabledFilter.enable();
+    },
+    disable: function(){
+      this.muteAll();
+      this.passthrough.enable();
     },
     muteAll: function(){
       for(var key in this._filters){
