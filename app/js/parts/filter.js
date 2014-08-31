@@ -2,12 +2,16 @@ define([
   "parts/filter/passthrough",
   "parts/filter/lowpass",
   "parts/filter/highpass",
-  "parts/filter/center-cancel"
+  "parts/filter/center-cancel",
+  "parts/filter/lowshelf",
+  "parts/filter/highshelf"
 ], function(
   PassThroughFilter,
   LowPassFilter,
   HighPassFilter,
-  CenterCancelFilter
+  CenterCancelFilter,
+  LowShelfFilter,
+  HighShelfFilter
 ){
 
   var Filter = function(){
@@ -15,12 +19,14 @@ define([
   };
 
   var filters = [
-      "pass through",
-      "low pass",
-      "high pass",
-      "center cancel",
-      "noise",
-      "pitch shifter"
+    "pass through",
+    "low pass",
+    "high pass",
+    "center cancel",
+    "low shelf",
+    "high shelf",
+    "noise",
+    "pitch shifter"
   ];
 
   var createPassThroughFilter = function(context){
@@ -39,6 +45,12 @@ define([
   };
   var createPitchShifter = function(context){
   };
+  var createLowShelfFilter = function(context){
+    return new LowShelfFilter(context);
+  };
+  var createHighShelfFilter = function(context){
+    return new HighShelfFilter(context);
+  };
   
   var createFilter = function(self, name, context){
     switch(name){
@@ -48,6 +60,8 @@ define([
     case "center cancel": return createCenterCancelFilter(context);
     case "noise": return createNoiseFilter(context);
     case "pitch shifter": return createPitchShifter(context);
+    case "low shelf": return createLowShelfFilter(context);
+    case "high shelf": return createHighShelfFilter(context);
     }
     return null;
   };
