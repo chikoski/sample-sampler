@@ -38,7 +38,9 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
   bufferedSource.loop = true;
   var mic = new Parts.Microphone(context);
   mic.disable();
-  var looper = new Parts.Looper(context);
+  var looper = new Parts.Looper({context: context,
+                                 tracks: 4
+                                });
   var filter = new Parts.Filter(context);
 
   var outputGain = context.createGain();
@@ -108,7 +110,7 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
   };
 
   var deviceStorageAvailable = function(){
-    return false;
+    return navigator != null && navigator.getDeviceStorage != null;
   };
 
   var libraryView = document.querySelector("#library > ul");
@@ -125,17 +127,37 @@ window.require(["parts", "create-audiobuffer", "view"], function(Parts, createAu
     }
   });
 
+  var loadMusicFromDeviceStorage = function(){
+    var storage = navigator.getDeviceStorage('music');
+    var enm = storage.enumerate();
+    enm.onsuccess = function(){
+      console.log(this);
+      library.push(this.result);
+      if(!this.done){
+        this.continue();
+      }else{
+        updateLibraryView();
+      }
+    };
+  };
+
   document.querySelector("#reload").addEventListener("click", function(event){
     event.preventDefault();
     if(deviceStorageAvailable()){
+      console.log("device storage is avialable");
+      loadMusicFromDeviceStorage();
     }else{
+      console.log("device storage is unavialable");
       fileInput.click();
     }
   });
 
-  var looperControl = new View.Looper({looper: looper, recordButton: document.querySelector("#recording")});
+  var looperControl = new View.Looper({looper: looper,
+                                       recordButton: document.querySelector("#recording"),
+                                       trackButton: document.querySelectorAll("[data-role=track-selector]")
+                                      });
   var micButton = new View.MicButton({mic: mic, el: document.querySelector("#microphone")});
-  var filterControl = new View.Filter({pad: document.querySelector("#pad"),
+  var filterControl = new View.Filter({pad: document.querySelector("[data-role=pad]"),
                                        changeButton: document.querySelector("#select-filter-type"),
                                        actionListController: myApp,
                                        filter: filter,
