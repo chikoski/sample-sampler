@@ -1,0 +1,29 @@
+{
+    "name": "SampleSampler",
+    "version": "1.0.0",
+    "description": "An awesome Firefox OS app",
+    "launch_path": "/index.html",
+    "icons": {
+        "60": "/icons/60x60.png",
+        "120": "/icons/120x120.png",
+        "128": "/icons/128x128.png"
+    },
+    "developer": {
+        "name": "chikoski",
+        "url": "https://github.com/chikoski"
+    },
+    "type": "privileged",
+    "permissions":{
+        "device-storage:music": {
+            "access": "readonly"
+        },
+        "device-storage:sdcard":{
+            "access":"readwrite"
+        },
+        "audio-capture": {
+            "description": "capture sound with mic input for sampling"
+        }
+    },
+    "default_locale": "ja" 
+}
+
