@@ -28,8 +28,8 @@ define([], function(){
   };
 
   var position = function(event, pad){
-    return {x: normalize(event.clientX - 20, pad.clientWidth),
-            y : 1.0 - normalize(event.clientY - 230, pad.clientHeight)};          
+    return {x: normalize(event.clientX - event.target.offsetLeft, pad.clientWidth),
+            y : 1.0 - normalize(event.clientY - event.target.offsetTop, pad.clientHeight)};          
   };
 
   var updateIndicater = function(x, y){
